@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<title>PageDown Editor</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="../css/jquery.pagedown-bootstrap.css" rel="stylesheet">
+
+	<style>
+		body {
+			padding-top: 10px;
+		}
+	</style>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.pagedown-bootstrap.combined.min.js"></script>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<h3>Responsive Editor</h3>
+			<textarea id="pagedownMe" class="form-control" rows="10">
+			This is the *first* editor.
+			------------------------------
+
+			Just plain **Markdown**, except that the input is sanitized:
+
+			<marquee>I'm the ghost from the past!</marquee>
+			</textarea>
+		
+		<h3>Another Editor with help button</h3>
+			<textarea id="pagedownMeDangerously" class="form-control" rows="10">
+			This is the *second* editor.
+			------------------------------
+
+			It has a plugin hook registered that surrounds all words starting with the
+			letter A with asterisks before doing the Markdown conversion. Another one gives bare links
+			a nicer link text. User input isn't sanitized here:
+
+			<marquee>I'm the ghost from the past!</marquee>
+
+			http://google.com
+
+			http://stackoverflow.com
+
+			It also includes a help button.
+			</textarea>
+		
+	</div>
+
+	<script type="text/javascript">
+		(function () {
+
+			$("textarea#pagedownMe").pagedownBootstrap();
+
+			$("textarea#pagedownMeDangerously").pagedownBootstrap({
+				'sanitize': false,
+				'help': function () { alert("Do you need help?"); },
+				'hooks': [
+					{
+						'event': 'preConversion',
+						'callback': function (text) {
+							return text.replace(/\b(a\w*)/gi, "*$1*");
+						}
+					},
+					{
+						'event': 'plainLinkText',
+						'callback': function (url) {
+							return "This is a link to " + url.replace(/^https?:\/\//, "");
+						}
+					}
+				]
+			});
+
+			$('.wmd-preview').addClass('well');
+
+		})();
+	</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!-- <beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+ -->
+ <beans:beans xmlns:security="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+	   
+ <!-- <http auto-config='true'>
+		<intercept-url pattern="/index" access="ROLE_ADMIN, ROLE_USER" />
+		<intercept-url pattern="/ask" access="ROLE_ADMIN" />
+		<form-login login-page="/login" default-target-url="/index"/>
+		<logout logout-success-url="/login" invalidate-session="false"/>
+	</http>
+ -->
+ 
+ <security:http auto-config='true'>
+		<security:access-denied-handler error-page="/403" />
+		
+		<security:intercept-url pattern="/questions/ask" access="ROLE_USER,ROLE_ADMIN" />
+		<security:intercept-url pattern="/profile" access="ROLE_USER" />	
+		<security:intercept-url pattern="/view-tags" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="view-questions" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/view-users" access="ROLE_ADMIN" />							
+		<security:form-login login-page="/login" default-target-url="/" authentication-failure-url="/login?error"/>
+		<security:logout logout-success-url="/login?logout" logout-url="/logout" 
+		invalidate-session="false"/>
+	</security:http>
+    
+ 	 <!--  <authentication-manager>
+	    <authentication-provider>
+  			<jdbc-user-service data-source-ref="dataSource"  
+				users-by-username-query="select username,password, enabled from users where username=?"  
+				authorities-by-username-query="select username, role from user_roles where username =?  " />
+	    </authentication-provider>
+	  </authentication-manager>
+ -->
+ <security:authentication-manager>
+	    <security:authentication-provider>
+  			<security:jdbc-user-service data-source-ref="dataSource"  
+				users-by-username-query="select username,password, enabled from users where username=?"  
+				authorities-by-username-query="select username, role from users where username =?  " />
+	    </security:authentication-provider>
+	  </security:authentication-manager>
+</beans:beans>
